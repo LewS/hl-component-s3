@@ -15,7 +15,7 @@ CloudFormation do
                 lambda_config = {}
                 lambda_config['Function'] = values['function']
                 lambda_config['Event'] = values['event']
-                lambda_config['Filter'] = values['filter']
+                lambda_config['Filter'] = values['filter'] if values.has_key?('filter')
                 notification_configurations['LambdaConfigurations'] << lambda_config
             end
         end
@@ -67,6 +67,7 @@ CloudFormation do
         NotificationConfiguration notification_configurations unless notification_configurations.empty?
         LifecycleConfiguration({ Rules: config['lifecycle_rules'] }) if config.has_key?('lifecycle_rules')
         AccelerateConfiguration({ AccelerationStatus: config['acceleration_status'] }) if config.has_key?('acceleration_status')
+        CorsConfiguration config['cors_configuration'] if config.has_key?('cors_configuration')
         PublicAccessBlockConfiguration config['public_access_block_configuration'] if config.has_key?('public_access_block_configuration')
         VersioningConfiguration({ Status: config['versioning_configuration'] }) if config.has_key?('versioning_configuration')
         IntelligentTieringConfiguration(config['intelligent_tiering_configuration']) if config.has_key?('intelligent_tiering_configuration')
